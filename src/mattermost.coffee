@@ -20,10 +20,10 @@ class Mattermost extends Adapter
           if err
             console.log err
 
-  attach: (attachments) ->
+  attach: (envelope, attachments) ->
     data = JSON.stringify({
       icon_url: @icon,
-      channel: @channel,
+      channel: @channel ? envelope.user?.room ? envelope.room, # send back to source channel only if not overwritten,
       username: @robot.name,
       attachments: attachments
     })
