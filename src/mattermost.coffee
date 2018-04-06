@@ -6,13 +6,12 @@ catch
 
 class Mattermost extends Adapter
 
-  send: (envelope, attach, strings...) ->
+  send: (envelope, strings...) ->
     for str in strings
       data = JSON.stringify({
         icon_url: @icon,
         channel: @channel ? envelope.user?.room ? envelope.room, # send back to source channel only if not overwritten,
         username: @robot.name,
-        attachments: attach,
         text: str
       })
       @robot.http(@url)
