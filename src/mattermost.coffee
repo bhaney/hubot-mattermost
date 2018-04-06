@@ -6,13 +6,12 @@ catch
 
 class Mattermost extends Adapter
 
-  send: (envelope, attach, strings...) ->
+  send: (envelope, strings...) ->
     for str in strings
       data = JSON.stringify({
         icon_url: @icon,
         channel: @channel ? envelope.user?.room ? envelope.room, # send back to source channel only if not overwritten,
         username: @robot.name,
-        attachments: attach,
         text: str
       })
       @robot.http(@url)
@@ -21,18 +20,20 @@ class Mattermost extends Adapter
           if err
             console.log err
 
-  attach: (envelope, attachments) ->
-    data = JSON.stringify({
-      icon_url: @icon,
-      channel: @channel ? envelope.user?.room ? envelope.room, # send back to source channel only if not overwritten,
-      username: @robot.name,
-      attachments: attachments
-    })
-    @robot.http(@url)
-      .header('Content-Type', 'application/json')
-      .post(data) (err, res, body) ->
-        if err
-          console.log err
+  attach: (envelope, attachments, strings...) ->
+    for str in strings
+      data = JSON.stringify({
+        icon_url: @icon,
+        channel: @channel ? envelope.user?.room ? envelope.room, # send back to source channel only if not overwritten,
+        username: @robot.name,
+        attachments: attachments,
+        text: str
+      })
+      @robot.http(@url)
+        .header('Content-Type', 'application/json')
+        .post(data) (err, res, body) ->
+          if err
+            console.log err
 
   reply: (envelope, strings...) ->
     for str in strings
