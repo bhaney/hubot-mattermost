@@ -20,27 +20,23 @@ class Mattermost extends Adapter
           if err
             console.log err
 
-  attach: (envelope, attachments, strings...) ->
-    for str in strings
-      data = JSON.stringify({
-        icon_url: @icon,
-        channel: @channel ? envelope.user?.room ? envelope.room, # send back to source channel only if not overwritten,
-        username: @robot.name,
-        attachments: attachments,
-        text: str
-      })
-      @robot.http(@url)
-        .header('Content-Type', 'application/json')
-        .post(data) (err, res, body) ->
-          if err
-            console.log err
-
   reply: (envelope, strings...) ->
     for str in strings
       @send envelope, "@#{envelope.user.name}: #{str}"
 
-  command: (command, strings...) ->
-    @send command, strings
+  command: (attachments, str) ->
+    data = JSON.stringify({
+      icon_url: @icon,
+      channel: @channel, # send back to source channel only if not overwritten,
+      username: @robot.name,
+      attachments: attachments,
+      text: str
+    })
+    @robot.http(@url)
+      .header('Content-Type', 'application/json')
+      .post(data) (err, res, body) ->
+        if err
+          console.log err
 
   run: ->
     # Tell Hubot we're connected so it can load scripts
