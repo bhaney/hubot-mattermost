@@ -24,6 +24,10 @@ class Mattermost extends Adapter
     for str in strings
       @send envelope, "@#{envelope.user.name}: #{str}"
 
+  reading: (envelope, strings...) ->
+    for str in strings
+      @send envelope, "@#{envelope.user.name}: #{str}"
+
   command: (command, strings...) ->
     @send command, strings
 
@@ -33,8 +37,8 @@ class Mattermost extends Adapter
     @tokens = process.env.MATTERMOST_TOKEN
     @channel = process.env.MATTERMOST_CHANNEL
     @endpoint = process.env.MATTERMOST_ENDPOINT
-    @url = process.env.MATTERMOST_INCOME_URL 
-    @icon = process.env.MATTERMOST_ICON_URL 
+    @url = process.env.MATTERMOST_INCOME_URL
+    @icon = process.env.MATTERMOST_ICON_URL
     if process.env.MATTERMOST_HUBOT_USERNAME?
       @robot.name = process.env.MATTERMOST_HUBOT_USERNAME
     @selfsigned = this.getBool(process.env.MATTERMOST_SELFSIGNED_CERT) if process.env.MATTERMOST_SELFSIGNED_CERT
@@ -50,7 +54,7 @@ class Mattermost extends Adapter
       process.exit 1
     @robot.router.post @endpoint, (req, res) =>
      # split string values by ',' as process.env return type string no matter what has been defined (eg array, string, int)
-     for token in @tokens.split(',')     
+     for token in @tokens.split(',')
        if token is req.body.token
          msg = req.body.text
          user = @robot.brain.userForId(req.body.user_id)
