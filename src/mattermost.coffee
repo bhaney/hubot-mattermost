@@ -12,6 +12,7 @@ class Mattermost extends Adapter
         icon_url: @icon,
         channel: @channel ? envelope.user?.room ? envelope.room, # send back to source channel only if not overwritten,
         username: @robot.name,
+        attachments: envelope.attachments or= []
         text: str
       })
       @robot.http(@url)
@@ -23,13 +24,6 @@ class Mattermost extends Adapter
   reply: (envelope, strings...) ->
     for str in strings
       @send envelope, "@#{envelope.user.name}: #{str}"
-
-  reading: (envelope, strings...) ->
-    for str in strings
-      @send envelope, "@#{envelope.user.name}: #{str}"
-
-  command: (command, strings...) ->
-    @send command, strings
 
   run: ->
     # Tell Hubot we're connected so it can load scripts
