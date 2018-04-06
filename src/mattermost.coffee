@@ -20,6 +20,19 @@ class Mattermost extends Adapter
           if err
             console.log err
 
+  attach: (attachments) ->
+    data = JSON.stringify({
+      icon_url: @icon,
+      channel: @channel,
+      username: @robot.name,
+      attachments: attachments
+    })
+    @robot.http(@url)
+      .header('Content-Type', 'application/json')
+      .post(data) (err, res, body) ->
+        if err
+          console.log err
+
   reply: (envelope, strings...) ->
     for str in strings
       @send envelope, "@#{envelope.user.name}: #{str}"
